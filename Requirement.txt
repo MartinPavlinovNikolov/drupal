@@ -1,0 +1,106 @@
+Requirement:
+Please create a new element called ‚Sectors‘.
+See designs attached.
+The element should be built in React, because we also need it for the child detail page.
+Under /common there should be a new tab called ‚stats‘.
+There we need the following fields:
+
+Livelihoods
+Health
+Education
+Community empowerment
+Nutrition
+Protection
+Emergency response
+
+Please create the pie chart in a way that it represents the percentages given in the backend.
+When the element comes into the viewport, there should be an animation the opens the circle from first option to last clockwise.
+The chart will be implemented as an UI component in the UI library.
+
+Update: After discussion, we decided to use ChartJS library.
+
+сега малко разяснения:
+1. инсталирай Drupal 8 с composer
+
+2. направи някакво репо в GitHub и пушни всичко там
+
+3. Инсталирай модула paragraphs през composer
+
+4. Направи нов paragraph type, който да се казва Sector elements.
+   
+   В него трябва да има 2 полета:
+   - 'Statistic Name' от тип clear-text
+   - 'Statistic Value' от тип integer.
+
+   И двете полета трябва да са задължителни (required)
+
+5. Направи още един paragraph type, който да се казва Sectors.
+   В него създаваме поле от тип entity reference revisions,
+   като му казваме да чете от bundle 'Paragraphs'
+   и му посочваме параграф типа 'Sector Elements',
+   като му казваме да може да се ползва неопределен брой пъти (unlimited)
+
+6. Избираме си кой да е content type и му добавяме поле с име 'Sectors'
+   от тип entity reference revisions,
+   където му посочваме да чете от bundle 'Paragraphs'
+   и му посочваме параграф типа 'Sectors'
+
+7. Създаваме нов модул, който се казва sector_elements
+   и в него разписваме темплейт,
+   който да се ползва, когато полето 'Sectors' от бъде показано от някой content type 
+
+8. Темплейта трябва да изкарва резултат във следната форма: 
+   
+   `<div id="sector-element" data-options='{"id":"ID-то на параграфа"}'></div>`
+
+9. Създаваме нов раут, който да има следния път: 
+   
+   /editorial/sector-element/{entity_id}
+
+10. Когато се отвори този път, трябва да се направи проверка има ли параграф с такова ID и ако няма,
+    да върне jsonResponse със статус 404 и message - 'Invalid paragraph ID'
+
+11. Ако има такова ID, проверяваме дали параграфа е от тип 'Sectors'
+    и ако не - подобно на т.10 казваме, че параграфа не е от тип 'Sectors'
+
+12. Ако проверките от т.10 и т.11 минат, взимаме всички стойности на Statistic Name и Statistic Value и връщаме jsonResponse обект от тях. Примерен резултат:
+[
+	{
+		"label": "Livelyhoods",
+		"value": 31
+	},
+	{
+		"label": "Health",
+		"value": 30
+	},
+	{
+		"label": "Education",
+		"value": 15
+	},
+	{
+		"label": "Community Empowerment",
+		"value": 10
+	},
+	{
+		"label": "Nutrition",
+		"value": 7
+	},
+	{
+		"label": "Protection",
+		"value": 4
+	},
+	{
+		"label": "Emergency Response",
+		"value": 3
+	}
+]
+
+ето и реален endpoint, който вече работи на точно този принцип: https://www-worldvision-de.wvunited.org/editorial/sector-element/56431 като единствената разлика е, че вместо статус 404 връща директно статус 500 (fatal error)
+
+ако ти остане някакво време и си готов прекалено бързо с това, може да направиш и останалата част от таска, която е на React.
+Там правим нов React проект (ползвайки create-react-app пакета),
+създаваме нов контейнер, който да следи в DOM-a ако се покаже div с #sector-element да зареди компонент с име Sectors,
+който да използва ChartJS лайбрарито.
+От там, трябва да вземе ID-то на параграфа от data-options атрибута и с Axios да направи GET request към ендпойнта от модула.
+На база резултатите, трябва да нарисува pie chart използвайки Name и Value от ендпойнта.
+Когато това нещо е готово, трябва да се намърда в custom модула, който си направил с endpoint-a и компилирания .js файл да се добави в sector_elements.libraries.yml файла и да се зарежда, единствено и само когато някъде се ползва полето 'Sectors'
