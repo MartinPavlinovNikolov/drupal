@@ -1,0 +1,7 @@
+sector_elements:
+  path: '/sector_elements'
+  defaults:
+    _title: 'Sector Elements'
+    _controller: '\Drupal\sector_elements\SectorElementsController::index'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,6 @@
+name: Sector Elements
+type: module
+package: Custom
+
+description: Learn about drupal modules.
+core: 8.x

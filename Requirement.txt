@@ -47,7 +47,7 @@ Update: After discussion, we decided to use ChartJS library.
 
 7. Създаваме нов модул, който се казва sector_elements
    и в него разписваме темплейт,
-   който да се ползва, когато полето 'Sectors' от бъде показано от някой content type 
+   който да се ползва, когато полето 'Sectors' бъде показано от някой content type 
 
 8. Темплейта трябва да изкарва резултат във следната форма: 
    
